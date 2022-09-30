@@ -160,6 +160,7 @@
     <ClCompile Include="..\..\src\materials\material.cpp" />
     <ClCompile Include="..\..\src\shaders\depthintersectionshader.cpp" />
     <ClCompile Include="..\..\src\shaders\intersectionshader.cpp" />
+    <ClCompile Include="..\..\src\shaders\normalintersectionshader.cpp" />
     <ClCompile Include="..\..\src\shaders\shader.cpp" />
     <ClCompile Include="..\..\src\shapes\infiniteplan.cpp" />
     <ClCompile Include="..\..\src\shapes\shape.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="..\..\src\materials\material.h" />
     <ClInclude Include="..\..\src\shaders\depthintersectionshader.h" />
     <ClInclude Include="..\..\src\shaders\intersectionshader.h" />
+    <ClInclude Include="..\..\src\shaders\normalintersectionshader.h" />
     <ClInclude Include="..\..\src\shaders\shader.h" />
     <ClInclude Include="..\..\src\shapes\infiniteplan.h" />
     <ClInclude Include="..\..\src\shapes\shape.h" />

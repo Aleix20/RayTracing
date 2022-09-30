@@ -6,12 +6,13 @@ class DepthIntersectionShader : public Shader
 public:
     DepthIntersectionShader();
     DepthIntersectionShader(Vector3D hitColor, Vector3D bgColor_);
+    Vector3D hitColor;
 
     virtual Vector3D computeColor(const Ray& r,
         const std::vector<Shape*>& objList,
-        const std::vector<PointLightSource>& lsList,  Intersection& its) const;
+        const std::vector<PointLightSource>& lsList) const;
 
-    Vector3D hitColor;
+    
 };
 
 #endif // DEPTHINTERSECTIONSHADER_H

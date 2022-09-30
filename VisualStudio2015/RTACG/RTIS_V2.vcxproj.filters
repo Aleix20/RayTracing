@@ -99,6 +99,9 @@
     <ClCompile Include="..\..\src\shaders\depthintersectionshader.cpp">
       <Filter>src\shaders</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\shaders\normalintersectionshader.cpp">
+      <Filter>src\shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\cameras\camera.h">
@@ -159,6 +162,9 @@
       <Filter>src\shapes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\shaders\depthintersectionshader.h">
+      <Filter>src\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\shaders\normalintersectionshader.h">
       <Filter>src\shaders</Filter>
     </ClInclude>
   </ItemGroup>
