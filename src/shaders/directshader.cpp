@@ -29,7 +29,9 @@ Vector3D DirectShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
                 Vector3D interesectionPoint = its->itsPoint;
                 Vector3D wi = actualSourcePos - interesectionPoint;
                 double maxT = std::sqrt(std::pow(wi.x, 2) + std::pow(wi.y, 2) + std::pow(wi.z, 2));
-                Ray wiTest = Ray(interesectionPoint.normalized(), wi.normalized(), 0, Epsilon, maxT);
+                
+                Ray wiTest = Ray(interesectionPoint, -wi.normalized(), 0, Epsilon, maxT);
+                
                 if (Utils::hasIntersection(wiTest, objList)) {
 
                   Vector3D reflectance= actualObject->getMaterial().getReflectance(its->normal, -r.d, wi);

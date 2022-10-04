@@ -87,16 +87,16 @@ void buildSceneSphere(Camera*& cam, Film*& film,
     // (...)
     lightSourceList = new std::vector<PointLightSource>;
     double offset = 3.0;
-    Vector3D lightPosition1 = Vector3D(0, offset - 1, 2 * offset);
-    Vector3D lightPosition2 = Vector3D(0, offset - 1, 0);
-    Vector3D lightPosition3 = Vector3D(0, offset - 1, offset);
+    Vector3D lightPosition1 = Vector3D(-5, 5, -5);
+    //Vector3D lightPosition2 = Vector3D(0, offset - 1, 0);
+    //Vector3D lightPosition3 = Vector3D(0, offset - 1, offset);
     Vector3D intensity = Vector3D(10, 10, 10); // Radiant intensity (watts/sr)
     PointLightSource pointLS1(lightPosition1, intensity);
-    PointLightSource pointLS2(lightPosition2, intensity);
-    PointLightSource pointLS3(lightPosition3, intensity);
+    //PointLightSource pointLS2(lightPosition2, intensity);
+    //PointLightSource pointLS3(lightPosition3, intensity);
     lightSourceList->push_back(pointLS1);
-    lightSourceList->push_back(pointLS2);
-    lightSourceList->push_back(pointLS3);
+    //lightSourceList->push_back(pointLS2);
+    //lightSourceList->push_back(pointLS3);
     //
     // DO NOT FORGET TO STORE THE LIGHT SOURCES IN THE "lightSourceList"
     // (...)
