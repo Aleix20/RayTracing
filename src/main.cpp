@@ -47,9 +47,9 @@ void buildSceneSphere(Camera*& cam, Film*& film,
     /* ************************** */
     // (...)
     //  EXAMPLE:  Material *green_50 = new Phong (Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
-    Material* redDiffuse = new Phong(Vector3D(0.7, 0.2, 0.3), Vector3D(0, 0, 0), 100);
-    Material* greenDiffuse = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0, 0, 0), 100);
-    Material* greyDiffuse = new Phong(Vector3D(0.8, 0.8, 0.8), Vector3D(0, 0, 0), 100);
+    Material* redDiffuse = new Phong(Vector3D(0.7, 0.2, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
+    Material* greenDiffuse = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
+    Material* greyDiffuse = new Phong(Vector3D(0.8, 0.8, 0.8), Vector3D(0.2, 0.6, 0.2), 50);
 
     /* ******* */
     /* Objects */
@@ -87,10 +87,10 @@ void buildSceneSphere(Camera*& cam, Film*& film,
     // (...)
     lightSourceList = new std::vector<PointLightSource>;
     double offset = 3.0;
-    Vector3D lightPosition1 = Vector3D(-5, 5, -5);
+    Vector3D lightPosition1 = Vector3D(-2, 2, -2);
     //Vector3D lightPosition2 = Vector3D(0, offset - 1, 0);
     //Vector3D lightPosition3 = Vector3D(0, offset - 1, offset);
-    Vector3D intensity = Vector3D(10, 10, 10); // Radiant intensity (watts/sr)
+    Vector3D intensity = Vector3D(20, 20, 20); // Radiant intensity (watts/sr)
     PointLightSource pointLS1(lightPosition1, intensity);
     //PointLightSource pointLS2(lightPosition2, intensity);
     //PointLightSource pointLS3(lightPosition3, intensity);
