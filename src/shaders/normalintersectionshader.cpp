@@ -12,9 +12,9 @@ NormalIntersectionShader::NormalIntersectionShader(Vector3D hitColor_, Vector3D 
 Vector3D NormalIntersectionShader::computeColor(const Ray& r, const std::vector<Shape*>& objList, const std::vector<PointLightSource>& lsList) const
 {
     Intersection* its = new Intersection();
-    
+    //Check the closest intersection
     if (Utils::getClosestIntersection(r, objList, *its)) {
-       
+       //Compute the color with the normal of the intersection
         Vector3D resultColor = (its->normal + Vector3D(1.0, 1.0, 1.0)) / 2;
         return resultColor;
     }

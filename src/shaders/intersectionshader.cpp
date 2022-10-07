@@ -10,8 +10,10 @@ IntersectionShader::IntersectionShader(Vector3D hitColor_, Vector3D bgColor_) :
 { }
 
 Vector3D IntersectionShader::computeColor(const Ray &r, const std::vector<Shape*> &objList, const std::vector<PointLightSource> &lsList) const
-{
+{   
+    //Check if there is a interesection with the objects
     if (Utils::hasIntersection(r, objList))
+        //Return the color used to paint the screen
         return hitColor;
     else
         return bgColor;

@@ -12,8 +12,10 @@ DepthIntersectionShader::DepthIntersectionShader(Vector3D hitColor_, Vector3D bg
 Vector3D DepthIntersectionShader::computeColor(const Ray& r, const std::vector<Shape*>& objList, const std::vector<PointLightSource>& lsList) const
 {
     Intersection* its = new Intersection();
-    
+    //Check the closest intersection
     if (Utils::getClosestIntersection(r, objList, *its)) {
+
+        //Compute the color using the closest distance of the Hit
         double const c = 1.0 - (r.maxT/ 7.0);
         Vector3D resultColor; 
         if (c >0) {

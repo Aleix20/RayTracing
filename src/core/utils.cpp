@@ -55,8 +55,6 @@ bool Utils::getClosestIntersection(const Ray& cameraRay, const std::vector<Shape
     }
 
 
-    //
-
     return result;
 }
 

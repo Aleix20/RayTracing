@@ -33,11 +33,11 @@ bool Phong::hasScatter() const
 
 Vector3D Phong::getReflectance(const Vector3D &n, const Vector3D &wo, const Vector3D &wi) const
 {
-	//Degut als operand pre establerts a la classe vector, hem hagut de modificar l'ordre de la formula
+	//Due to the pre - established operands in the vector class, we had to modify the order of the formula	
+	//Compute ideal reflection direction
 	Vector3D wr = n*2*dot(n,wi) - wi;
-	//Vector3D r = kd*std::max(dot(wi,n),0.001) + ks * pow(std::max(dot(wo, wr), 0.0001), shine);
+	//Compute the reflectance of a phong material
 	Vector3D r = kd * dot(wi, n) + ks * pow(dot(wo, wr), shine);
-	//Vector3D r = kd*dot(wi,n);
 	return r;
 }
 
