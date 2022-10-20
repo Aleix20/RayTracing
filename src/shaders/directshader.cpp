@@ -41,6 +41,8 @@ Vector3D DirectShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 					color += actualSource_s.getIntensity(interesectionPoint) * reflectance* dot(its->normal, -r.d);
 				}
 			}
+			Vector3D ambientTerm = Vector3D(0.2, 0.2, 0.2);
+			color+= its->shape->getMaterial().getDiffuseCoefficient() * ambientTerm;
 		}
 
 		if (its->shape->getMaterial().hasSpecular()) {
@@ -84,7 +86,9 @@ Vector3D DirectShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 
 		}
 
+		
 		return color;
+		
 
 	}
 	else {

@@ -43,12 +43,61 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 			}
 		}
 
+		
+		Vector3D ambientTerm = Vector3D(0.2, 0.2, 0.2);
+		color += its->shape->getMaterial().getDiffuseCoefficient() * ambientTerm;
+		
+		
+		
+		if (its->shape->getMaterial().hasSpecular()) {
 
-		return color;//its->shape->getMaterial().getDiffuseCoefficient()*ambient_term +color
+			Vector3D wr = its->normal * 2 * (dot(-r.d, its->normal)) + r.d;
+			Ray reflectionRay = Ray(its->itsPoint, wr, r.depth + 1);
+			color = computeColor(reflectionRay, objList, lsList);
+		}
+
+		if (its->shape->getMaterial().hasTransmission()) {
+
+			double nt = its->shape->getMaterial().getIndexOfRefraction();
+
+			if (dot(r.d, its->normal) > 0) { //We check if we are inside the material, if so, we invert things
+				its->normal = -its->normal;
+				nt = 1 / its->shape->getMaterial().getIndexOfRefraction();
+			}
+
+
+			double cos_alpha = dot(its->normal, -r.d);
+			double sin2_alpha = 1 - std::pow(cos_alpha, 2);
+			double radical = 1 - std::pow(nt, 2) * sin2_alpha; //Get indexOfRefraction ja agafa el ratio
+
+			if (radical >= 0) {
+
+				double first = -std::sqrt(radical);
+				double second = nt * dot(-r.d, its->normal);
+				Vector3D third = its->normal * (first + second);
+
+				Vector3D wt = third - (-r.d) * nt;
+
+				Ray refracRay = Ray(its->itsPoint, wt, r.depth + 1);
+				color = computeColor(refracRay, objList, lsList);
+				//color = Vector3D(1, 0, 0);
+			}
+			else {
+				Vector3D wr = its->normal * 2 * (dot(-r.d, its->normal)) + r.d;
+				Ray reflectionRay = Ray(its->itsPoint, wr, r.depth + 1);
+				color = computeColor(reflectionRay, objList, lsList);
+			}
+
+		}
+
+
+		return color;
+
 
 	}
 	else {
 
 		return bgColor;
 	}
+	
 }
