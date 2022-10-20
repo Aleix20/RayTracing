@@ -13,8 +13,8 @@ public:
 	bool Phong::hasTransmission() const;
 	bool Phong::hasScatter() const;
 	bool Phong::hasDiffuseOrGlossy() const;
-	virtual Vector3D Phong::getReflectance(const Vector3D& n, const Vector3D& wo, const Vector3D& wi) const;
-	virtual Vector3D getDiffuseCoefficient() const;
+	Vector3D Phong::getReflectance(const Vector3D& n, const Vector3D& wo, const Vector3D& wi) const;
+	Vector3D getDiffuseCoefficient() const;
 
 private:
 	Vector3D kd;
