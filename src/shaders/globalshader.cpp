@@ -5,9 +5,11 @@
 GlobalShader::GlobalShader()
 { }
 
-GlobalShader::GlobalShader(Vector3D bgColor_) :
+GlobalShader::GlobalShader(Vector3D bgColor_, Vector3D ambientTerm_) :
 	Shader(bgColor_)
-{ }
+{ 
+	this->ambientTerm = ambientTerm;
+}
 
 Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& objList, const std::vector<PointLightSource>& lsList) const
 {
@@ -41,11 +43,10 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 					color += actualSource_s.getIntensity(interesectionPoint) * reflectance;
 				}
 			}
+			color += its->shape->getMaterial().getDiffuseCoefficient() * ambientTerm;
 		}
 
 		
-		Vector3D ambientTerm = Vector3D(0.2, 0.2, 0.2);
-		color += its->shape->getMaterial().getDiffuseCoefficient() * ambientTerm;
 		
 		
 		

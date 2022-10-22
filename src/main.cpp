@@ -19,6 +19,7 @@
 #include "shaders/normalintersectionshader.h"
 #include "shaders/depthshader.h"
 #include "shaders/directshader.h"
+#include "shaders/globalshader.h"
 
 
 #include "materials/phong.h"
@@ -261,7 +262,8 @@ int main()
     //Task 4
     //Shader* shader = new NormalIntersectionShader(intersectionColor, bgColor);
     //Task 5
-    Shader *shader = new DirectShader (bgColor);
+    //Shader *shader = new DirectShader(bgColor);
+    Shader *shader = new GlobalShader(bgColor, Vector3D(0.4));
 
 
 

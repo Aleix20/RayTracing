@@ -6,8 +6,8 @@ class GlobalShader : public Shader
 {
 public:
     GlobalShader();
-    GlobalShader(Vector3D bgColor_);
-
+    GlobalShader(Vector3D bgColor_, Vector3D ambientTerm_ );
+    Vector3D ambientTerm;
     virtual Vector3D computeColor(const Ray& r,
         const std::vector<Shape*>& objList,
         const std::vector<PointLightSource>& lsList) const;
