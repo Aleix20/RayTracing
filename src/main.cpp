@@ -279,7 +279,7 @@ int main()
     //---------------------------------------------------------------------------
 
     //Paint Image ONLY TASK 1
-    PaintImage(film);
+    //PaintImage(film);
 
     // Launch some rays! TASK 2,3,... 
     raytrace(cam, shader, film, objectsList, lightSourceList);
