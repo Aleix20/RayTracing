@@ -37,8 +37,8 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 					//Check this method (Eq.4)
 					
 					Vector3D wj = sampler.getSample(its.normal);
-					Ray incidentRay = Ray(its.itsPoint, wj, r.depth+1); //r.depth +1 or not?
-					Lo_ind += computeColor(incidentRay, objList, lsList) * its.shape->getMaterial().getReflectance(its.normal, -r.d, wj) * dot(its.normal, wj) * (1 / (2 * M_PI * nSamples));
+					Ray secondaryRay = Ray(its.itsPoint, wj, r.depth+1); //r.depth +1 or not?
+					Lo_ind += computeColor(secondaryRay, objList, lsList) * its.shape->getMaterial().getReflectance(its.normal, -r.d, wj) * dot(its.normal, wj) * (1 / (2 * M_PI * nSamples));
 				}
 				
 				color = Lo + Lo_ind;
