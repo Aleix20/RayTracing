@@ -8,7 +8,7 @@ public:
     DirectShader();
     DirectShader(Vector3D bgColor_);
 
-    virtual Vector3D computeColor(const Ray& r,
+    Vector3D computeColor(const Ray& r,
         const std::vector<Shape*>& objList,
         const std::vector<PointLightSource>& lsList) const;
 };

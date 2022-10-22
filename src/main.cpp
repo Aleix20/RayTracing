@@ -19,6 +19,7 @@
 #include "shaders/normalintersectionshader.h"
 #include "shaders/depthshader.h"
 #include "shaders/directshader.h"
+#include "shaders/globalshader.h"
 
 
 #include "materials/phong.h"
@@ -100,6 +101,7 @@ void buildSceneCornellBox(Camera*& cam, Film*& film,
     lightSourceList->push_back(pointLS1);
     lightSourceList->push_back(pointLS2);
     lightSourceList->push_back(pointLS3);
+    
 }
 
 
@@ -261,9 +263,10 @@ int main()
     //Task 4
     //Shader* shader = new NormalIntersectionShader(intersectionColor, bgColor);
     //Task 5
-    Shader *shader = new DirectShader (bgColor);
+    //Shader *shader = new DirectShader (bgColor);
 
-
+    //Global Illumination
+    Shader* shader = new GlobalShader (bgColor);
 
     // Build the scene---------------------------------------------------------
     // 
