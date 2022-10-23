@@ -3,6 +3,7 @@
 #include "../core/utils.h"
 #include "../core/hemisphericalsampler.h"
 
+
 GlobalShader::GlobalShader()
 { }
 
@@ -16,36 +17,41 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 {
 	Intersection its;
 	
-	Vector3D l_o_ind;
-	Vector3D l_i_ind;
+	Vector3D lo_dir;
+	Vector3D lo_ind;
+	Vector3D color;
+	
+	
 	//Check the closest intersection with all the object of the scene
 	if (Utils::getClosestIntersection(r, objList, its)) {
-	
-		Vector3D color;
-		if (its.shape->getMaterial().hasSpecular()) {
-			Vector3D wr = its.normal * 2 * (dot(-r.d, its.normal)) + r.d;
-			Ray reflectionRay = Ray(its.itsPoint, wr, r.depth + 1);
-			if (r.depth == 0)
-				color += computeColor(reflectionRay, objList, lsList);
-			if (r.depth == n_bounces)
-				l_o_ind += computeColor(reflectionRay, objList, lsList);
+		
 
-	
+		//Check if the material is a Specular material (i.e, mirror-like)
+		
+		if (its.shape->getMaterial().hasSpecular()) {
+			
+			Vector3D wr = its.normal * 2 * (dot(-r.d, its.normal)) + r.d;
+			Ray reflectionRay = Ray(its.itsPoint, wr, r.depth); //r.depth + 1 or not???
+		
+			color = computeColor(reflectionRay, objList, lsList); //+= or not?
 		}
 
+		
+		//Check if the material is transmissive material
+		
 		if (its.shape->getMaterial().hasTransmission()) {
 
-			double nt = its.shape->getMaterial().getIndexOfRefraction();
+			double nt = its.shape->getMaterial().getIndexOfRefraction(); //Get indexOfRefraction gets the nt (i.e, the ratio between mediums)
 
-			if (dot(r.d, its.normal) > 0) { //We check if we are inside the material, if so, we invert things
+			if (dot(r.d, its.normal) > 0) { //We check if we are inside the material, if so, we invert the normal and the Refraction index
 				its.normal = -its.normal;
-				nt = 1 / its.shape->getMaterial().getIndexOfRefraction();
+				nt = 1 / nt; 
 			}
-
-
+			
+			//Compute the radical
 			double cos_alpha = dot(its.normal, -r.d);
 			double sin2_alpha = 1 - std::pow(cos_alpha, 2);
-			double radical = 1 - std::pow(nt, 2) * sin2_alpha; //Get indexOfRefraction ja agafa el ratio
+			double radical = 1 - std::pow(nt, 2) * sin2_alpha; 
 
 			if (radical >= 0) {
 
@@ -55,81 +61,76 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 
 				Vector3D wt = third - (-r.d) * nt;
 
-				Ray refracRay = Ray(its.itsPoint, wt, r.depth + 1);
-				color += computeColor(refracRay, objList, lsList);
-				//color = Vector3D(1, 0, 0);
-			}
-			else {
-				Vector3D wr = its.normal * 2 * (dot(-r.d, its.normal)) + r.d;
-				Ray reflectionRay = Ray(its.itsPoint, wr, r.depth + 1);
-				color += computeColor(reflectionRay, objList, lsList);
-			}
+				Ray refracRay = Ray(its.itsPoint, wt, r.depth); //r.depth + 1 or not?
+				color = computeColor(refracRay, objList, lsList);//+= or not?
 
+			}
+			else { //Compute like a specular material (mirror-like)
+				
+				Vector3D wr = its.normal * 2 * (dot(-r.d, its.normal)) + r.d;
+				Ray reflectionRay = Ray(its.itsPoint, wr, r.depth); //r.depth +1 or not?
+				color = computeColor(reflectionRay, objList, lsList); //+= or not?
+			}
 		}
 
+		
+		//Check if the material is a Phong material
+		
 		if (its.shape->getMaterial().hasDiffuseOrGlossy()) {
-			if (r.depth == 0)	//First Bounce
-			{
-
-				for (int j = 0; j < n_directions; ++j) {		//Indirect light at output
-
-					Vector3D origen = its.itsPoint;
+			
+			if (r.depth == 0){	//First intersection with a phong material
+			
+				for (int j = 0; j < nSamples; ++j) { //Indirect light at output
 
 					HemisphericalSampler sample;
 					Vector3D wj = sample.getSample(its.normal);
-					Ray r_bounce = Ray(origen, wj, r.depth + 1, 0.01);
+					Ray secondaryRay = Ray(its.itsPoint, -wj, r.depth + 1); //secondary ray is with -wj or not???
 
-					if (Utils::hasIntersection(r_bounce, objList))	// NEXT BOUNCE
-					{
-						Vector3D n = its.normal;
-						Vector3D wo = (r.o - its.itsPoint).normalized();
-						Vector3D l_i_ind = computeColor(r_bounce, objList, lsList);
-						Vector3D r = its.shape->getMaterial().getReflectance(n, wo, wj);
-						l_o_ind += Utils::multiplyPerCanal(l_i_ind, r);
-					}
-					
+					lo_ind += computeColor(secondaryRay, objList, lsList) * its.shape->getMaterial().getReflectance(its.normal, -r.d, wj) * dot(its.normal, wj);
 				}
-				l_o_ind = l_o_ind * 1 / (2 * 3.1417 * n_directions);
-
 				
+				lo_ind = lo_ind * (1 / (2 * M_PI * nSamples));
 			}
+			
+			else if (r.depth == 3) { //Case in which r.depth == maxDepth
+				
+				lo_ind = ambientTerm * its.shape->getMaterial().getDiffuseCoefficient();
+			}
+
 			else {
-				l_o_ind = ambientTerm * its.shape->getMaterial().getDiffuseCoefficient();
+				
+				Vector3D w_r = its.normal * 2 * (dot(-r.d, its.normal)) + r.d;
+				Ray wn = Ray(its.itsPoint, its.normal, r.depth + 1);
+				Ray wr = Ray(its.itsPoint, w_r, r.depth + 1);
+				
+				lo_ind = (computeColor(wn, objList, lsList) * its.shape->getMaterial().getReflectance(its.normal, -r.d, its.normal) 
+					+ 
+					computeColor(wr, objList, lsList) * its.shape->getMaterial().getReflectance(its.normal, -r.d, w_r)) 
+					* 
+					(1 / (4 * M_PI));
 			}
-
 			
 			
-			Vector3D interesectionPoint = its.itsPoint;
-			Vector3D wo = (r.o - interesectionPoint).normalized();
 			
-
 			//Check of the lightsources of the scene
-			for (int s = 0; s < lsList.size(); s++)
-			{
-				PointLightSource actualSource_s = lsList.at(s);
+			for (auto const& light : lsList) {
+				Vector3D P_L = light.getPosition() - its.itsPoint; //Vector from intersection point to lightsource
+				Vector3D wi = P_L.normalized(); //Normalized Vector wi
+				Ray ray_visibility(its.itsPoint, wi, 0, Epsilon, P_L.length());
 
-				Vector3D actualSourcePos = actualSource_s.getPosition();
-				//Vector to the lightsource
-				Vector3D wi = (actualSourcePos - interesectionPoint);
-				double maxT = std::sqrt(std::pow(wi.x, 2) + std::pow(wi.y, 2) + std::pow(wi.z, 2));
-				//Ray to check if there are any object between the light and the hit point
-				Ray wiTest = Ray(interesectionPoint, wi.normalized(), 0, Epsilon, maxT);
-				//Check if there is any object between the light and the intersection point
-				if (!Utils::hasIntersection(wiTest, objList)) {
-					//Compute the phong color
-					
-					Vector3D reflectance = its.shape->getMaterial().getReflectance(its.normal, wo, wi.normalized());
-					color += actualSource_s.getIntensity(interesectionPoint) * reflectance;
-				}
+				if (Utils::hasIntersection(ray_visibility, objList))
+					continue;
+				lo_dir += light.getIntensity(its.itsPoint) * its.shape->getMaterial().getReflectance(its.normal, -r.d, wi) * dot(its.normal, wi);
 			}
-			color += l_o_ind;
+
+			color = lo_ind + lo_dir;
 		}
 
+		
 		return color;
 
-
-	}
-	else {
+	
+	} else {
 
 		return bgColor;
 	}

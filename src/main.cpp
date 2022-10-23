@@ -263,7 +263,7 @@ int main()
     //Shader* shader = new NormalIntersectionShader(intersectionColor, bgColor);
     //Task 5
     //Shader *shader = new DirectShader(bgColor);
-    Shader *shader = new GlobalShader(bgColor, Vector3D(0.4));
+    Shader *shader = new GlobalShader(bgColor, Vector3D(0.8));
 
 
 
