@@ -29,15 +29,15 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 		if (its.shape->getMaterial().hasSpecular()) {
 			
 			Vector3D wr = its.normal * 2 * (dot(-r.d, its.normal)) + r.d;
-			Ray reflectionRay = Ray(its.itsPoint, wr, r.depth); //r.depth + 1 or not???
+			Ray reflectionRay = Ray(its.itsPoint, wr, r.depth); 
 		
-			color = computeColor(reflectionRay, objList, lsList); //+= or not?
+			color = computeColor(reflectionRay, objList, lsList); 
 		}
 
 		
 		//Check if the material is a transmissive material
 		
-		/*if (its.shape->getMaterial().hasTransmission()) {
+		if (its.shape->getMaterial().hasTransmission()) {
 
 			double nt = its.shape->getMaterial().getIndexOfRefraction(); //Get indexOfRefraction gets the nt (i.e, the ratio between mediums)
 
@@ -59,17 +59,17 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 
 				Vector3D wt = third - (-r.d) * nt;
 
-				Ray refracRay = Ray(its.itsPoint, wt, r.depth); //r.depth + 1 or not?
-				color = computeColor(refracRay, objList, lsList);//+= or not?
+				Ray refracRay = Ray(its.itsPoint, wt, r.depth); 
+				color = computeColor(refracRay, objList, lsList);
 
 			}
 			else { //Compute like a specular material (mirror-like)
 				
 				Vector3D wr = its.normal * 2 * (dot(-r.d, its.normal)) + r.d;
-				Ray reflectionRay = Ray(its.itsPoint, wr, r.depth); //r.depth +1 or not?
-				color = computeColor(reflectionRay, objList, lsList); //+= or not?
+				Ray reflectionRay = Ray(its.itsPoint, wr, r.depth);
+				color = computeColor(reflectionRay, objList, lsList);
 			}
-		}*/
+		}
 
 		
 		//Check if the material is a Phong material
@@ -95,7 +95,7 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 				lo_ind = ambientTerm * its.shape->getMaterial().getDiffuseCoefficient();
 			}
 
-			/*/else {
+			else {
 				
 				Vector3D w_r = its.normal * 2 * (dot(-r.d, its.normal)) + r.d;
 				Ray wn = Ray(its.itsPoint, its.normal, r.depth + 1);
@@ -106,7 +106,7 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 					computeColor(wr, objList, lsList) * its.shape->getMaterial().getReflectance(its.normal, -r.d, w_r)) 
 					* 
 					(1 / (4 * M_PI));
-			}*/
+			}
 			
 			
 			
