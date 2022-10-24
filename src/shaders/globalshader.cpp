@@ -7,11 +7,9 @@
 GlobalShader::GlobalShader()
 { }
 
-GlobalShader::GlobalShader(Vector3D bgColor_, Vector3D ambientTerm_) :
+GlobalShader::GlobalShader(Vector3D bgColor_) :
 	Shader(bgColor_)
-{ 
-	this->ambientTerm = ambientTerm;
-}
+{ }
 
 Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& objList, const std::vector<PointLightSource>& lsList) const
 {
@@ -37,9 +35,9 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 		}
 
 		
-		//Check if the material is transmissive material
+		//Check if the material is a transmissive material
 		
-		if (its.shape->getMaterial().hasTransmission()) {
+		/*if (its.shape->getMaterial().hasTransmission()) {
 
 			double nt = its.shape->getMaterial().getIndexOfRefraction(); //Get indexOfRefraction gets the nt (i.e, the ratio between mediums)
 
@@ -71,7 +69,7 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 				Ray reflectionRay = Ray(its.itsPoint, wr, r.depth); //r.depth +1 or not?
 				color = computeColor(reflectionRay, objList, lsList); //+= or not?
 			}
-		}
+		}*/
 
 		
 		//Check if the material is a Phong material
@@ -84,20 +82,20 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 
 					HemisphericalSampler sample;
 					Vector3D wj = sample.getSample(its.normal);
-					Ray secondaryRay = Ray(its.itsPoint, -wj, r.depth + 1); //secondary ray is with -wj or not???
+					Ray secondaryRay = Ray(its.itsPoint, wj, r.depth + 1); //secondary ray is with -wj or not???
 
 					lo_ind += computeColor(secondaryRay, objList, lsList) * its.shape->getMaterial().getReflectance(its.normal, -r.d, wj) * dot(its.normal, wj);
 				}
 				
-				lo_ind = lo_ind * (1 / (2 * M_PI * nSamples));
+				lo_ind = lo_ind * (1.0 / (2.0 * M_PI * nSamples));
 			}
 			
-			else if (r.depth == 3) { //Case in which r.depth == maxDepth
+			else if (r.depth == maxDepth) { //Case in which r.depth == maxDepth
 				
 				lo_ind = ambientTerm * its.shape->getMaterial().getDiffuseCoefficient();
 			}
 
-			else {
+			/*/else {
 				
 				Vector3D w_r = its.normal * 2 * (dot(-r.d, its.normal)) + r.d;
 				Ray wn = Ray(its.itsPoint, its.normal, r.depth + 1);
@@ -108,7 +106,7 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 					computeColor(wr, objList, lsList) * its.shape->getMaterial().getReflectance(its.normal, -r.d, w_r)) 
 					* 
 					(1 / (4 * M_PI));
-			}
+			}*/
 			
 			
 			
@@ -123,7 +121,7 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 				lo_dir += light.getIntensity(its.itsPoint) * its.shape->getMaterial().getReflectance(its.normal, -r.d, wi) * dot(its.normal, wi);
 			}
 
-			color = lo_ind + lo_dir;
+			color = lo_ind+lo_dir;
 		}
 
 		

@@ -78,7 +78,7 @@ void buildSceneCornellBox(Camera*& cam, Film*& film,
     Shape* s1 = new Sphere(1.5, sphereTransform1, mirror);
     Matrix4x4 sphereTransform2;
     sphereTransform2 = Matrix4x4::translate(Vector3D(1.0, 0.0, 2));
-    Shape* s2 = new Sphere(1, sphereTransform2, transmissive);
+    Shape* s2 = new Sphere(1, sphereTransform2, red_100);
     Matrix4x4 sphereTransform3;
     radius = 1;
     sphereTransform3 = Matrix4x4::translate(Vector3D(0.3, -offset + radius, 5));
@@ -263,7 +263,7 @@ int main()
     //Shader* shader = new NormalIntersectionShader(intersectionColor, bgColor);
     //Task 5
     //Shader *shader = new DirectShader(bgColor);
-    Shader *shader = new GlobalShader(bgColor, Vector3D(0.8));
+    Shader *shader = new GlobalShader(bgColor);
 
 
 
