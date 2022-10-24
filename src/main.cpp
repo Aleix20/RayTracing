@@ -27,8 +27,8 @@
 #include "materials/transmissive.h"
 
 
-void buildSceneCornellBox(Camera*& cam, Film*& film, 
-    std::vector<Shape*>*& objectsList, 
+void buildSceneCornellBox(Camera*& cam, Film*& film,
+    std::vector<Shape*>*& objectsList,
     std::vector<PointLightSource>*& lightSourceList)
 {
     /* **************************** */
@@ -177,11 +177,11 @@ void buildSceneSphere(Camera*& cam, Film*& film,
     // DO NOT FORGET TO STORE THE LIGHT SOURCES IN THE "lightSourceList"
     // (...)
     //
-    
+
 }
 
-void raytrace(Camera* &cam, Shader* &shader, Film* &film,
-              std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
+void raytrace(Camera*& cam, Shader*& shader, Film*& film,
+    std::vector<Shape*>*& objectsList, std::vector<PointLightSource>*& lightSourceList)
 {
     unsigned int sizeBar = 40;
 
@@ -190,14 +190,14 @@ void raytrace(Camera* &cam, Shader* &shader, Film* &film,
 
     // Main raytracing loop
     // Out-most loop invariant: we have rendered lin lines
-    for(size_t lin=0; lin<resY; lin++)
+    for (size_t lin = 0; lin < resY; lin++)
     {
         // Show progression
-        if ( lin%(resY/sizeBar) == 0)
+        if (lin % (resY / sizeBar) == 0)
             std::cout << ".";
 
         // Inner loop invariant: we have rendered col columns
-        for(size_t col=0; col<resX; col++)
+        for (size_t col = 0; col < resX; col++)
         {
             // Compute the pixel position in NDC
             double x = (double)(col + 0.5) / resX;
@@ -207,7 +207,7 @@ void raytrace(Camera* &cam, Shader* &shader, Film* &film,
             Ray cameraRay = cam->generateRay(x, y);
 
             // Compute ray color according to the used shader
-            Vector3D pixelColor = shader->computeColor( cameraRay, *objectsList, *lightSourceList );
+            Vector3D pixelColor = shader->computeColor(cameraRay, *objectsList, *lightSourceList);
 
             // Store the pixel color
             film->setPixelValue(col, lin, pixelColor);
@@ -234,27 +234,27 @@ void PaintImage(Film* film)
         for (size_t col = 0; col < resX; col++)
         {
             //CHANGE...()            
-            Vector3D color = Vector3D((double)col / resX, (double)lin / resY, (double)0);            
-            film->setPixelValue(col,lin, color);
-           
+            Vector3D color = Vector3D((double)col / resX, (double)lin / resY, (double)0);
+            film->setPixelValue(col, lin, color);
+
         }
     }
 }
 
 int main()
 {
-    std::string separator     = "\n----------------------------------------------\n";
+    std::string separator = "\n----------------------------------------------\n";
     std::string separatorStar = "\n**********************************************\n";
     std::cout << separator << "RT-ACG - Ray Tracer for \"Advanced Computer Graphics\"" << separator << std::endl;
 
     // Create an empty film
-    Film *film;
+    Film* film;
     film = new Film(720, 512);
 
 
     // Declare the shader
     Vector3D bgColor(0.0, 0.0, 0.0); // Background color (for rays which do not intersect anything)
-    Vector3D intersectionColor(1,0,0);
+    Vector3D intersectionColor(1, 0, 0);
     //Task 2
     //Shader* shader = new IntersectionShader(intersectionColor, bgColor);
     //Task 3
@@ -263,7 +263,7 @@ int main()
     //Shader* shader = new NormalIntersectionShader(intersectionColor, bgColor);
     //Task 5
     //Shader *shader = new DirectShader(bgColor);
-    Shader *shader = new GlobalShader(bgColor);
+    Shader* shader = new GlobalShader(bgColor);
 
 
 
@@ -284,7 +284,7 @@ int main()
     // Launch some rays! TASK 2,3,... 
     raytrace(cam, shader, film, objectsList, lightSourceList);
 
-    
+
 
     // Save the final result to file
     std::cout << "\n\nSaving the result to file output.bmp\n" << std::endl;

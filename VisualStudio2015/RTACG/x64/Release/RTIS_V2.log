@@ -1,7 +1,8 @@
-﻿  globalshader.cpp
-  Generando código
-  1 of 357 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+﻿  main.cpp
+  globalshader.cpp
+  Generating code
+  2 of 357 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    7 functions had inline decision re-evaluated but remain unchanged
-  Generación de código finalizada
-  RTIS_V2.vcxproj -> C:\Users\USUARIO\Desktop\RTACG_Students\VisualStudio2015\RTACG\x64\Release\RT_ACG.exe
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  RTIS_V2.vcxproj -> C:\Users\aleix\Documents\GitHub\RTACG_Students\VisualStudio2015\RTACG\x64\Release\RT_ACG.exe

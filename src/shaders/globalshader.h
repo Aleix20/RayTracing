@@ -12,7 +12,7 @@ public:
     GlobalShader();
     GlobalShader(Vector3D bgColor_);
     
-    Vector3D ambientTerm = Vector3D(0.2);
+    Vector3D ambientTerm = Vector3D(0.4);
     int nSamples = 50;
     int maxDepth = 3;
     virtual Vector3D computeColor(const Ray& r,
