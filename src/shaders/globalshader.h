@@ -13,8 +13,8 @@ public:
     GlobalShader(Vector3D bgColor_);
     
     Vector3D ambientTerm = Vector3D(0.4);
-    int nSamples = 50;
-    int maxDepth = 3;
+    int nSamples = 50;//Number of rays that we will throw trough the hemisphere
+    int maxDepth = 3;//Number of bounces
     virtual Vector3D computeColor(const Ray& r,
         const std::vector<Shape*>& objList,
         const std::vector<PointLightSource>& lsList) const;

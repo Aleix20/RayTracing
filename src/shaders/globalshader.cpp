@@ -46,10 +46,12 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 			}
 
 			//Compute the radical
+			//Compute the parts of the transmissive vector
+
 			double cos_alpha = dot(its.normal, -r.d);
 			double sin2_alpha = 1 - std::pow(cos_alpha, 2);
 			double radical = 1 - std::pow(nt, 2) * sin2_alpha;
-
+			//If the sqrt is possitive then we can treat the material as transmissive
 			if (radical >= 0) {
 
 				double first = -std::sqrt(radical);
@@ -76,30 +78,32 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 		if (its.shape->getMaterial().hasDiffuseOrGlossy()) {
 
 			if (r.depth == 0) {	//First intersection with a phong material
-
+				//Throw nRays from the point to random directions(like a hemisphere)
 				for (int j = 0; j < nSamples; ++j) { //Indirect light at output
 
 					HemisphericalSampler sample;
 					Vector3D wj = sample.getSample(its.normal);
-					Ray secondaryRay = Ray(its.itsPoint, wj, r.depth + 1); //secondary ray is with -wj or not???
+					Ray secondaryRay = Ray(its.itsPoint, wj, r.depth + 1); //random ray adding one to the depth
 
+					//Compute the indirect light in a recursive way
 					lo_ind += computeColor(secondaryRay, objList, lsList) * its.shape->getMaterial().getReflectance(its.normal, -r.d, wj) ;
 				}
-
+				//Aproximation/average of all the indirect lights
 				lo_ind = lo_ind * (1.0 / (2.0 * M_PI * nSamples));
 			}
 
 			else if (r.depth == 2) { //Case in which r.depth == maxDepth
-
+				//Aproximation of indirect light using ambient term
 				lo_ind = ambientTerm * its.shape->getMaterial().getDiffuseCoefficient();
 			}
 
 			else {
-
+				//If we have n_bounces the we do another aproximation with the normal and the reflected ray
 				Vector3D w_r = its.normal * 2 * (dot(-r.d, its.normal)) + r.d;
 				Ray wn = Ray(its.itsPoint, its.normal, r.depth + 1);
 				Ray wr = Ray(its.itsPoint, w_r, r.depth + 1);
 
+				//Aproximation using the normal and the perfect reflected ray
 				lo_ind = (computeColor(wn, objList, lsList) * its.shape->getMaterial().getReflectance(its.normal, -r.d, its.normal)
 					+
 					computeColor(wr, objList, lsList) * its.shape->getMaterial().getReflectance(its.normal, -r.d, w_r))
@@ -110,6 +114,7 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 
 
 			//Check of the lightsources of the scene
+			//For each one of the lights in the scene we compute the perfect reflection ray
 			for (auto const& light : lsList) {
 				Vector3D P_L = light.getPosition() - its.itsPoint; //Vector from intersection point to lightsource
 				Vector3D wi = P_L.normalized(); //Normalized Vector wi
@@ -117,9 +122,11 @@ Vector3D GlobalShader::computeColor(const Ray& r, const std::vector<Shape*>& obj
 
 				if (Utils::hasIntersection(ray_visibility, objList))
 					continue;
+				//If there is not object between the point and the light, we can compute the refleted light in that point
 				lo_dir += light.getIntensity(its.itsPoint) * its.shape->getMaterial().getReflectance(its.normal, -r.d, wi) * dot(its.normal, wi);
 			}
-
+			//Total light will be the addition of direct light and indirect
+			//We multiply the indirect light by 5.0 to get a more visible result
 			color = lo_ind*5.0 + lo_dir;
 		}
 
